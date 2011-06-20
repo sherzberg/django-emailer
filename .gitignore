@@ -1,0 +1,12 @@
+*.pyc
+*.tar
+*.tar.gz
+*.tar.bz2
+*.pyc
+*.pyo
+media/images/samples/
+media/images/products/
+media/tar/
+media/tar-samples/
+media/proofing/
+*.db
