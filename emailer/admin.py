@@ -37,4 +37,4 @@ class EmailListAdmin(admin.ModelAdmin):
 admin.site.register(EmailTemplate, EmailTemplateAdmin)
 admin.site.register(Email, EmailAdmin)
 admin.site.register(EmailBlast, EmailBlastAdmin)
-admin.site.register(EmailList)
+#admin.site.register(EmailList)
