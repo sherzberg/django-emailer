@@ -26,6 +26,10 @@ class EmailTemplate(DefaultModel):
     def __unicode__(self):
         return str(self.name)
     
+    @models.permalink
+    def get_absolute_url(self):
+        return ('emailer-template', (), {'template_id': self.id})
+    
 class EmailList(DefaultModel):
     TYPE_SITEUSERS_USERDEFINED = 0
     

@@ -99,7 +99,6 @@ TINYMCE_COMPRESSOR = False
 USE_COMPRESSOR = False
 TINYMCE_USE_TEMPLATES = True
 
-
 TINYMCE_DEFAULT_CONFIG = {
     'theme' : "advanced",
     'plugins' : "autolink,lists,spellchecker,pagebreak,style,layer,table,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
@@ -123,6 +122,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'skin' : "o2k7",
     'skin_variant' : "silver",
     
-    'template_external_list_url' : "tinymce/templates/",
+    'template_external_list_url' : "emailer/templates/",
 
 }
