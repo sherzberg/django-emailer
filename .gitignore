@@ -10,3 +10,5 @@ media/tar/
 media/tar-samples/
 media/proofing/
 *.db
+.project
+.pydevproject
