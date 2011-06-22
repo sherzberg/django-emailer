@@ -1,4 +1,5 @@
 from django.db import models
+
 try:
     from tinymce.models import HTMLField
 except:
@@ -31,22 +32,22 @@ class EmailTemplate(DefaultModel):
         return ('emailer-template', (), {'template_id': self.id})
     
 class EmailList(DefaultModel):
-    TYPE_SITEUSERS_USERDEFINED = 0
+    LISTTYPE_SITEUSERS_USERDEFINED = 0
     
-    EMAIL_LIST_CHOICES = (
-                         (TYPE_SITEUSERS_USERDEFINED,'Site Users - User Defined'),
+    EMAIL_LIST_TYPE_CHOICES = (
+                         (LISTTYPE_SITEUSERS_USERDEFINED,'Site Users - User Defined'),
                          )
     
     name = models.CharField(blank=False, unique=True, max_length=40)
     type = models.IntegerField(
                                blank=False,
-                               choices=EMAIL_LIST_CHOICES, 
-                               default=TYPE_SITEUSERS_USERDEFINED
+                               choices=EMAIL_LIST_TYPE_CHOICES, 
+                               default=LISTTYPE_SITEUSERS_USERDEFINED
                                )
-    
+        
     def get_users(self):
         
-        if self.type in (EmailList.TYPE_SITEUSERS_USERDEFINED):
+        if self.type in (EmailList.LISTTYPE_SITEUSERS_USERDEFINED):
             return []
         else:
             raise NotImplementedError()
@@ -56,12 +57,26 @@ class EmailList(DefaultModel):
 
     def __unicode__(self):
         return str(self.name)
-    
+
 class EmailBlast(DefaultModel):
-    name = models.CharField(blank=False, unique=True, max_length=40)
-    send_after = models.DateTimeField(blank=False)
-    list = models.ForeignKey(EmailList, blank=True)
+    BLASTTYPE_ONEOFF = 0
     
+    EMAIL_BLAST_LIST_CHOICES = (
+                         (BLASTTYPE_ONEOFF,'One off email'),
+                         )
+    
+    name = models.CharField(blank=False, unique=True, max_length=40)
+    type = models.IntegerField(
+                               blank=True,
+                               choices=EMAIL_BLAST_LIST_CHOICES, 
+                               default=BLASTTYPE_ONEOFF
+                               )
+    send_after = models.DateTimeField(blank=False)
+    from_address = models.EmailField(blank=False)
+    subject = models.CharField(blank=False, max_length=40)
+        
+    html = HTMLField(blank=False)
+        
     class Meta:
         ordering = ['date_created']
 
@@ -86,23 +101,27 @@ class Email(DefaultModel):
     
     email_blast = models.ForeignKey(EmailBlast, blank=False)
     to_address = models.EmailField(blank=False)
-    from_address = models.EmailField(blank=False)
-    subject = models.CharField(blank=False, max_length=40)
+    merge_data = models.TextField(editable=False)
     
     status = models.IntegerField(blank=False, choices=STATUS_CHOCES, default=STATUS_PREPARED, editable=False)
     status_message = models.TextField(blank=True, editable=False)
-    
-    content_html = HTMLField(blank=False)
-    merge_data = models.TextField(editable=False)
-    
     opened = models.BooleanField(default=False, editable=False)
     
     objects = EmailManager()
+    
+    def _subject(self): return self.email_blast.subject
+    subject = property(_subject)
+    
+    def _from_address(self): return self.email_blast.from_address
+    from_address = property(_from_address)
+    
+    def _html(self): return self.email_blast.html
+    html = property(_html)
     
     class Meta:
         ordering = ['date_created']
     
     @models.permalink
     def get_tracking_png_url(self):
-        return ('emailer-tracking_png', (), {'tracking_id': self.uuid})
+        return ('emailer-tracking_png', (), {'tracking_id': self.id})
     

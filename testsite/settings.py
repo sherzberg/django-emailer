@@ -97,7 +97,7 @@ INSTALLED_APPS = (
 TINYMCE_JS_URL = "%sjs/tiny_mce/tiny_mce_src.js" % MEDIA_URL
 TINYMCE_COMPRESSOR = False
 USE_COMPRESSOR = False
-TINYMCE_USE_TEMPLATES = True
+TINYMCE_USE_TEMPLATES = False
 
 TINYMCE_DEFAULT_CONFIG = {
     'theme' : "advanced",
