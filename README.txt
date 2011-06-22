@@ -10,6 +10,8 @@ Features (that currently work):
     - (manually) Send queue emails
     - (manually) Send one off emails. Used in generic forms or for event notifications on your site
     - Integrates with tinymce, just install django-tinymce and configure it appropriately
+    - HTML and text content in emails
+    - Tracking for opened emails (uses image requests for tracking so only possible for HTML clients)
     
 Future Features:
     - Create email lists
