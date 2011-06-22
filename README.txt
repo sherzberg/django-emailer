@@ -18,8 +18,10 @@ Future Features:
         - Query
         - User defined
         - Email signup, like newsletters and such
+    - Email merge fields based on the email lists or any supplied merge data
     - Celery async email jobs
     - Notification signals (register signals for custom events and get emails)
     - Admin actions to process emails
     - Newsletter signups
+    
     
