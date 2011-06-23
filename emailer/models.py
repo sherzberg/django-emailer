@@ -15,7 +15,7 @@ class DefaultModel(models.Model):
         abstract = True
   
 class EmailTemplate(DefaultModel):
-    name = models.CharField(blank=False, unique=True, max_length=40)
+    name = models.CharField(blank=False, max_length=40)
     description = models.TextField(blank=True)
     html = models.TextField(blank=False)
     
