@@ -1,9 +1,4 @@
 from django.db import models
-
-try:
-    from tinymce.models import HTMLField
-except:
-    from django.db.models import TextField as HtmlField
     
 import uuid, datetime
 
@@ -22,7 +17,7 @@ class DefaultModel(models.Model):
 class EmailTemplate(DefaultModel):
     name = models.CharField(blank=False, unique=True, max_length=40)
     description = models.TextField(blank=True)
-    html = HTMLField(blank=False)
+    html = models.TextField(blank=False)
     
     def __unicode__(self):
         return str(self.name)
@@ -75,7 +70,7 @@ class EmailBlast(DefaultModel):
     from_address = models.EmailField(blank=False)
     subject = models.CharField(blank=False, max_length=40)
         
-    html = HTMLField(blank=False)
+    html = models.TextField(blank=False)
         
     class Meta:
         ordering = ['date_created']
