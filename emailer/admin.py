@@ -8,16 +8,9 @@ except:
     
 from emailer.models import *
      
-class EmailAdminForm(forms.ModelForm):  
-    html = forms.CharField(widget=HtmlWidget(attrs={'cols': 80, 'rows': 40}))
-    
-    class Meta:
-        model = Email
-        
 class EmailAdmin(admin.ModelAdmin):
     list_display = ('email_blast', 'to_address', 'status', 'opened', 'get_tracking_png_url',)
     list_filter = ('status',)
-    form = EmailAdminForm
 
 class EmailBlastAdminForm(forms.ModelForm):  
     html = forms.CharField(widget=HtmlWidget(attrs={'cols': 80, 'rows': 40}))
