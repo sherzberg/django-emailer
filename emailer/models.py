@@ -81,7 +81,7 @@ class EmailBlast(DefaultModel):
 class EmailManager(models.Manager):
     
     def email_from_tracking(self, id):
-        return self.get(uuid=id)
+        return self.get(id=id)
     
 class Email(DefaultModel):
     STATUS_PREPARED = 0
