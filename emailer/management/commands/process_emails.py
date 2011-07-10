@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         
         processor = SimpleProcessor()
-        
+                
         processor.prepare_emails()
         num_processed = processor.process_emails()
         

@@ -4,8 +4,6 @@ from django.conf import settings
 import datetime
 
 from emailer.models import Email
-from emailer.utils import send_email
-
 
 class IEmailProcessor():
     
@@ -17,14 +15,17 @@ class IEmailProcessor():
     
 class SimpleProcessor(IEmailProcessor):
     
-    def prepare_emails(self):
-        self.emails_to_process = Email.objects.filter(status=Email.STATUS_PREPARED)
+    def prepare_emails(self, blast=None):
+        if blast:
+            self.emails_to_process = Email.objects.filter(status=Email.STATUS_PREPARED, email_blast=blast)
+        else:
+            self.emails_to_process = Email.objects.filter(status=Email.STATUS_PREPARED)
     
         return len(self.emails_to_process)
     
     def process_emails(self):
         for email in self.emails_to_process:     
-            status = send_email(email)
+            status = email.send()
             
         return len(self.emails_to_process)
     
