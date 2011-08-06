@@ -73,10 +73,25 @@ class EmailList(DefaultModel):
     
 #    objects = EmailListManager()
     
+    def _is_valid_field(self, field):
+        return not field == 'id' and not field.startswith('_')
+    
     def get_objects(self):
         
         if self.type in (EmailList.LISTTYPE_SITEUSERS_USERDEFINED,):
-            return self.data_site_users.all()
+            users = self.data_site_users.all()
+            
+            try:            
+                for u in users:
+                    for field,value in u.get_profile().__dict__.iteritems():
+                        valid = True
+                        if self._is_valid_field(field):
+                            setattr(u, field, value)
+            except:
+                #eat this if there is no profile defined in settings.py
+                pass
+                      
+            return users
         
         elif self.type in (EmailList.LISTTYPE_QUERY_CUSTOM_SQL,):
             cursor = connection.cursor()
@@ -110,7 +125,6 @@ class EmailList(DefaultModel):
     def merge_fields(self):
         try:
             obj = self.get_objects()[0]
-            print obj
         except:
             obj = object()
             
@@ -180,8 +194,6 @@ def _add_tracking_info(html, tracking_id, tracking_png_url):
 
 def _apply_merge_data(html, merge_data):
     t = Template(html)
-    print html, type(html)
-    print merge_data, type(merge_data)
     c = Context(merge_data)
     return t.render(c)
           
