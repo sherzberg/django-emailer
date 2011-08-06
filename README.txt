@@ -1,6 +1,6 @@
 django-emailer
 
-v.1 - 2011-06-22
+v.1 - 2011-08-06
 
 This django app is used to manage bulk (and one off) emails. You can create email templates,
 and email lists. Emails can be created and bulk sent in a future date.
@@ -42,8 +42,12 @@ Future Features:
     - include in urls (urls.py)
         url(r'^emailer/', include('emailer.urls')),
         
-    - if using django-tinymce, put this in the tinymce.init config:
+    - if using django-tinymce, put this in the tinymce.init config (enables tiny-mce templates to use emailer templates):
         'template_external_list_url' : "emailer/templates/",
+        
+    - sync up your models, see django-south for more information
+        $ python manage.py syncdb
+        $ python manage.py migrate emailer
     
     
     
