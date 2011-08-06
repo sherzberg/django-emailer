@@ -11,10 +11,8 @@ class Migration(DataMigration):
             import cPickle as pickle
         except ImportError:
             import pickle
-            
-        from emailer.models import Email
         
-        for email in Email.objects.all():
+        for email in orm.Email.objects.all():
             email.merge_data = pickle.dumps(eval(email.merge_data))
             email.save()
         
@@ -23,10 +21,8 @@ class Migration(DataMigration):
             import cPickle as pickle
         except ImportError:
             import pickle
-            
-        from emailer.models import Email
-        
-        for email in Email.objects.all():
+                    
+        for email in orm.Email.objects.all():
             email.merge_data = str(email.merge_data)
             email.save()
 
