@@ -94,6 +94,7 @@ INSTALLED_APPS = (
     'tinymce',
     'emailer',
     'south',
+    'testapp',
 )
 
 #TINYMCE_SPELLCHECKER = False

@@ -17,14 +17,15 @@ def send_raw_email(email_obj, from_address, subject, content_html, just_prepare=
     email_list.is_oneoff = True
     email_list.type = EmailList.LISTTYPE_RAW_EMAILS
     email_list.save()
-    
+
     email_blast = EmailBlast()
     email_blast.name = subject+ ' '+str(datetime.datetime.today().strftime("%Y-%b-%d-%m"))
-    email_blast.lists = [email_list]
     email_blast.send_after = datetime.datetime.now()
     email_blast.from_address = from_address
     email_blast.subject = subject
     email_blast.html = content_html
+    email_blast.save()
+    email_blast.lists.add(email_list)
     email_blast.save()
     
     if just_prepare:

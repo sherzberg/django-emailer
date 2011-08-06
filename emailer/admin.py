@@ -33,7 +33,7 @@ class EmailTemplateAdmin(admin.ModelAdmin):
     form = EmailTemplateAdminForm
     
 class EmailListAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'date_created', 'preview_emails',)
+    list_display = ('name', 'type', 'date_created', 'preview_emails', 'merge_fields',)
     list_filter = ('type', 'is_oneoff',)
     
     def changelist_view(self, request, extra_context=None):

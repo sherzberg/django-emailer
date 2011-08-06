@@ -17,7 +17,7 @@ class Command(BaseCommand):
         from_address = 'test@gmail.com'
         subject = 'one off test'
         
-        html = '<p>Hello</p>lksjdlfkdj'
+        html = '''<p>This message was sent to: {{ email }}</p>'''
         
         send_raw_email(RawEmail(to_address), from_address, subject, html)
         print 'test sent'

@@ -6,6 +6,8 @@ from django.template import Context, Template
 from django.conf import settings
 
 from emailer.html2text import html2text
+from emailer.fields import DictionaryField
+
 from urlparse import urljoin
 
 import uuid, json
@@ -105,6 +107,17 @@ class EmailList(DefaultModel):
     preview_emails.short_description = 'Preview Emails'
     preview_emails.allow_tags = True
     
+    def merge_fields(self):
+        try:
+            obj = self.get_objects()[0]
+            print obj
+        except:
+            obj = object()
+            
+        return obj.__dict__.keys()
+    merge_fields.short_description = 'Merge Fields'
+    merge_fields.allow_tags = True
+    
     class Meta:
         ordering = ['name']
 
@@ -167,6 +180,8 @@ def _add_tracking_info(html, tracking_id, tracking_png_url):
 
 def _apply_merge_data(html, merge_data):
     t = Template(html)
+    print html, type(html)
+    print merge_data, type(merge_data)
     c = Context(merge_data)
     return t.render(c)
           
@@ -174,7 +189,11 @@ class EmailManager(models.Manager):
     
     def email_from_tracking(self, id):
         return self.get(id=id)
-    
+
+
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^emailer\.fields\.DictionaryField"])
+
 class Email(DefaultModel):
     STATUS_PREPARED = 0
     STATUS_SENT = 1
@@ -188,7 +207,7 @@ class Email(DefaultModel):
     
     email_blast = models.ForeignKey(EmailBlast, blank=False)
     to_address = models.EmailField(blank=False)
-    merge_data = models.TextField(editable=False)
+    merge_data = DictionaryField(editable=False, blank=True)
     
     status = models.IntegerField(blank=False, choices=STATUS_CHOCES, default=STATUS_PREPARED, editable=False)
     status_message = models.TextField(blank=True, editable=False)
