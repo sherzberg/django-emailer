@@ -24,7 +24,7 @@ DATABASE_HOST = ''             # Set to empty string for localhost. Not used wit
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
 if DEBUG:
-    EMAIL_HOST_USER = 'heirloomproductionsonline@gmail.com'
+    EMAIL_HOST_USER = 'test@gmail.com'
     EMAIL_HOST = '127.0.0.1'
     EMAIL_PORT = 1025
     EMAIL_USE_TLS = False
