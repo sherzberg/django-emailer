@@ -185,7 +185,11 @@ def _apply_merge_data(html, merge_data):
     t = Template(html)
     c = Context(merge_data)
     return t.render(c)
-          
+
+class IncorrectEmailStatus(Exception):
+    def __init__(self):
+        Exception.__init__(self)
+                  
 class EmailManager(models.Manager):
     
     def email_from_tracking(self, id):
@@ -257,6 +261,9 @@ class Email(DefaultModel):
         return msg
     
     def send(self):
+        if self.status != Email.STATUS_PREPARED:
+            raise IncorrectEmailStatus("Email is not in status of prepared, something bad must have happened")
+        
         message = self._build_message()
         
         try:
