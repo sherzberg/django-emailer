@@ -10,7 +10,9 @@ except ImportError:
 
 
 class DictionaryField(models.Field):
-    #taken from django-geo
+    '''
+    Field that represents a dict object. Borrowed from django-geo
+    '''
     __metaclass__ = models.SubfieldBase
     
     def to_python(self, value):
