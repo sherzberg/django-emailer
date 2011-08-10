@@ -6,6 +6,9 @@ from django.template import Context, Template
 from django.conf import settings
 from django.contrib.sites.models import Site
 
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([], ["^emailer\.fields\.DictionaryField"])
+
 from emailer.html2text import html2text
 from emailer.fields import DictionaryField
 
@@ -35,10 +38,6 @@ class EmailTemplate(DefaultModel):
     def get_absolute_url(self):
         return ('emailer-template', (), {'template_id': self.id})
 
-#class EmailListManager(models.Manager):
-#    def get_query_set(self):
-#        return super(EmailListManager, self).get_query_set().filter(is_oneoff=False)
-    
 class EmailList(DefaultModel):
     LISTTYPE_SITEUSERS_USERDEFINED = 0
     LISTTYPE_QUERY_CUSTOM_SQL = 1
@@ -69,9 +68,7 @@ class EmailList(DefaultModel):
     data_raw_json = models.TextField(blank=True)
     
     is_oneoff = models.BooleanField(default=False)
-    
-#    objects = EmailListManager()
-    
+        
     def _is_valid_field(self, field):
         return not field == 'id' and not field.startswith('_')
     
@@ -80,10 +77,10 @@ class EmailList(DefaultModel):
         if self.type in (EmailList.LISTTYPE_SITEUSERS_USERDEFINED,):
             users = self.data_site_users.all()
             
-            try:            
+            try:
+                #try to include profile fields on User object            
                 for u in users:
                     for field,value in u.get_profile().__dict__.iteritems():
-                        valid = True
                         if self._is_valid_field(field):
                             setattr(u, field, value)
             except:
@@ -125,7 +122,7 @@ class EmailList(DefaultModel):
         try:
             obj = self.get_objects()[0]
         except:
-            obj = object()
+            obj = EmailList.RawEmail()
             
         return obj.__dict__.keys()
     merge_fields.short_description = 'Merge Fields'
@@ -138,8 +135,7 @@ class EmailList(DefaultModel):
         if self.is_oneoff and not self.name.startswith('_'):
             self.name = '_'+self.name
         models.Model.save(self,*args, **kwargs)        
-        
-        
+         
     def __unicode__(self):
         return str(self.name)
 
@@ -150,7 +146,7 @@ class EmailBlast(DefaultModel):
     send_after = models.DateTimeField(blank=False)
     from_address = models.EmailField(blank=False)
     subject = models.CharField(blank=False, max_length=40)
-        
+    
     html = models.TextField(blank=False)
     
     def _is_prepared(self):
@@ -175,6 +171,10 @@ class EmailBlast(DefaultModel):
                     email.save()
                     
     def send_now(self):
+        '''
+        Sends an email for all objects in the assigned lists.
+        Do not do this if there is a ton of emails!
+        '''
         if not self.is_prepared:
             self.prepare_for_send()
         
@@ -190,10 +190,6 @@ class EmailManager(models.Manager):
     
     def email_from_tracking(self, id):
         return self.get(id=id)
-
-
-from south.modelsinspector import add_introspection_rules
-add_introspection_rules([], ["^emailer\.fields\.DictionaryField"])
 
 class Email(DefaultModel):
     STATUS_PREPARED = 0
@@ -241,7 +237,6 @@ class Email(DefaultModel):
     def _add_tracking_info(self, html):
         tracking_html = self._append_tracking_image(html)
         
-        #tracking_id = self.id
         return tracking_html
 
     def _build_message(self):
