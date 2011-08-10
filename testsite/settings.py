@@ -2,7 +2,6 @@
 
 import os
 
-SITE_URL = "http://testsite.com"
 
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 CURRENT_PATH = os.getcwd()

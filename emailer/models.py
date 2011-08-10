@@ -4,11 +4,10 @@ from django.db import connection
 from django.core.mail import EmailMultiAlternatives
 from django.template import Context, Template
 from django.conf import settings
+from django.contrib.sites.models import Site
 
 from emailer.html2text import html2text
 from emailer.fields import DictionaryField
-
-from urlparse import urljoin
 
 import uuid, json
 
@@ -164,7 +163,6 @@ class EmailBlast(DefaultModel):
     def __unicode__(self):
         return str(self.name)
     
-    
     def prepare_for_send(self):
         if not self.is_prepared:
             for list in self.lists.all():
@@ -183,15 +181,6 @@ class EmailBlast(DefaultModel):
         for email in Email.objects.filter(email_blast=self):
             email.send()
         
-def _append_tracking_image(html,tracking_url):
-    html = html + r'<img src="%s" alt="tracking url" />' %str(urljoin(settings.SITE_URL,tracking_url))
-    return html
-
-def _add_tracking_info(html, tracking_id, tracking_png_url):
-    tracking_html = _append_tracking_image(html, tracking_png_url)
-    
-    return tracking_html
-
 def _apply_merge_data(html, merge_data):
     t = Template(html)
     c = Context(merge_data)
@@ -243,6 +232,18 @@ class Email(DefaultModel):
     def get_tracking_png_url(self):
         return ('emailer-tracking_png', (), {'tracking_id': self.id})
     
+    def _append_tracking_image(self, html):    
+        tracking_url = 'http://%s%s' % (Site.objects.get_current().domain, self.get_tracking_png_url())
+        
+        html = html + r'<img src="%s" alt="tracking url" id="trackingurl" />' %str(tracking_url)
+        return html
+    
+    def _add_tracking_info(self, html):
+        tracking_html = self._append_tracking_image(html)
+        
+        #tracking_id = self.id
+        return tracking_html
+
     def _build_message(self):
         blast = self.email_blast
         
@@ -253,7 +254,7 @@ class Email(DefaultModel):
         merged_html = _apply_merge_data(self.html, self.merge_data)
         
         text_content = html2text(merged_html)
-        html_content = _add_tracking_info(merged_html, self.id, self.get_tracking_png_url())
+        html_content = self._add_tracking_info(merged_html)
         
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
