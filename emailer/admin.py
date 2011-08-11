@@ -9,7 +9,7 @@ except:
 from emailer.models import *
      
 class EmailAdmin(admin.ModelAdmin):
-    list_display = ('email_blast', 'to_address', 'status', 'opened', 'get_tracking_png_url', 'merge_data',)
+    list_display = ('email_blast', 'to_address', 'status', 'opened', 'merge_data',)
     list_filter = ('status',)
 
 class EmailBlastAdminForm(forms.ModelForm):  
