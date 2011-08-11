@@ -5,7 +5,7 @@ import datetime
 
 
 
-def send_raw_email(email_obj, from_address, subject, content_html, just_prepare=False):
+def send_raw_email(email_obj, from_address, subject, content_html, send_after = None, just_prepare=False):
     '''
     Method to generically send a raw email with merge data. Use this method in your own apps to
     be able to track single emails. Could be for notifications or acknowledgements of events.
@@ -20,7 +20,7 @@ def send_raw_email(email_obj, from_address, subject, content_html, just_prepare=
 
     email_blast = EmailBlast()
     email_blast.name = subject+ ' '+str(datetime.datetime.today().strftime("%Y-%b-%d-%m"))
-    email_blast.send_after = datetime.datetime.now()
+    email_blast.send_after = send_after if send_after else datetime.datetime.now()
     email_blast.from_address = from_address
     email_blast.subject = subject
     email_blast.html = content_html
@@ -35,7 +35,7 @@ def send_raw_email(email_obj, from_address, subject, content_html, just_prepare=
         
     return status
 
-def send_siteusers_email(user_objs, from_address, subject, content_html, just_prepare=False):
+def send_siteusers_email(user_objs, from_address, subject, content_html, send_after=None, just_prepare=False):
     '''
     Method to generically send a raw email with merge data. Use this method in your own apps to
     be able to track single emails. Could be for notifications or acknowledgements of events.
@@ -51,7 +51,7 @@ def send_siteusers_email(user_objs, from_address, subject, content_html, just_pr
     email_blast = EmailBlast()
     email_blast.name = subject+ ' '+str(datetime.datetime.today().strftime("%Y-%b-%d-%m"))
     email_blast.lists = [email_list]
-    email_blast.send_after = datetime.datetime.now()
+    email_blast.send_after = send_after if send_after else datetime.datetime.now()
     email_blast.from_address = from_address
     email_blast.subject = subject
     email_blast.html = content_html
