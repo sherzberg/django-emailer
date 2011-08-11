@@ -243,6 +243,15 @@ class Email(DefaultModel):
         
         return tracking_html
 
+    def _convert_relative_urls(self, html):
+        return html
+    
+    def _prepare_html(self):
+        html = _apply_merge_data(self.html, self.merge_data)
+        html = self._convert_relative_urls(html)
+        
+        return html
+    
     def _build_message(self):
         blast = self.email_blast
         
@@ -250,10 +259,10 @@ class Email(DefaultModel):
         from_email = blast.from_address
         to = self.to_address
         
-        merged_html = _apply_merge_data(self.html, self.merge_data)
+        fixed_html = self._prepare_html()
         
-        text_content = html2text(merged_html)
-        html_content = self._add_tracking_info(merged_html)
+        text_content = html2text(fixed_html)
+        html_content = self._add_tracking_info(fixed_html)
         
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
