@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import connection
 from django.core.mail import EmailMultiAlternatives
 from django.template import Context, Template
@@ -43,6 +43,7 @@ class EmailList(DefaultModel):
     LISTTYPE_QUERY_CUSTOM_SQL = 1
     LISTTYPE_RAW_EMAILS = 2
     LISTTYPE_RAW_JSON = 3
+    LISTTYPE_SITEGROUPS = 4
     
     
     EMAIL_LIST_TYPE_CHOICES = (
@@ -50,6 +51,7 @@ class EmailList(DefaultModel):
                          (LISTTYPE_QUERY_CUSTOM_SQL, 'Custom SQL Query'),
                          (LISTTYPE_RAW_EMAILS, 'Raw Emails'),
                          (LISTTYPE_RAW_EMAILS, 'Raw JSON'),
+                         (LISTTYPE_SITEGROUPS, 'Site Groups'),
                          )
     
     class RawEmail():
@@ -66,37 +68,48 @@ class EmailList(DefaultModel):
     data_site_users = models.ManyToManyField(User, blank=True)
     data_query_sql = models.TextField(blank=True)
     data_raw_json = models.TextField(blank=True)
+    data_site_groups = models.ManyToManyField(Group, blank=True)
     
     is_oneoff = models.BooleanField(default=False)
         
     def _is_valid_field(self, field):
         return not field == 'id' and not field.startswith('_')
     
+    def _get_user_objs(self, users):
+        try:
+            #try to include profile fields on User object            
+            for u in users:
+                for field,value in u.get_profile().__dict__.iteritems():
+                    if self._is_valid_field(field):
+                        setattr(u, field, value)
+        except:
+            #eat this if there is no profile defined in settings.py
+            pass
+        return users
+    
     def get_objects(self):
         
         if self.type in (EmailList.LISTTYPE_SITEUSERS_USERDEFINED,):
-            users = self.data_site_users.all()
-            
-            try:
-                #try to include profile fields on User object            
-                for u in users:
-                    for field,value in u.get_profile().__dict__.iteritems():
-                        if self._is_valid_field(field):
-                            setattr(u, field, value)
-            except:
-                #eat this if there is no profile defined in settings.py
-                pass
-                      
+            users = self._get_user_objs(self.data_site_users.all())
             return users
         
-        elif self.type in (EmailList.LISTTYPE_QUERY_CUSTOM_SQL,):
-            cursor = connection.cursor()
-            cursor.execute(self.data_query_sql)
-            rows = cursor.fetchall()
-            objs = []
-            for row in rows:#not good
-                objs.append(EmailList.RawEmail(row[0]))
-            return objs
+        elif self.type == EmailList.LISTTYPE_SITEGROUPS:
+            users = []
+            groups = self.data_site_groups.all()
+            
+            for group in groups:
+                users += self._get_user_objs(group.user_set.all())
+                
+            return users
+        
+#        elif self.type in (EmailList.LISTTYPE_QUERY_CUSTOM_SQL,):
+#            cursor = connection.cursor()
+#            cursor.execute(self.data_query_sql)
+#            rows = cursor.fetchall()
+#            objs = []
+#            for row in rows:#not good
+#                objs.append(EmailList.RawEmail(row[0]))
+#            return objs
         
         elif self.type in (EmailList.LISTTYPE_RAW_EMAILS,):
             return [EmailList.RawEmail(email.strip()) for email in self.data_raw_emails.split(',')]
@@ -122,7 +135,7 @@ class EmailList(DefaultModel):
         try:
             obj = self.get_objects()[0]
         except:
-            obj = EmailList.RawEmail()
+            obj = EmailList.RawEmail("")
             
         return obj.__dict__.keys()
     merge_fields.short_description = 'Merge Fields'

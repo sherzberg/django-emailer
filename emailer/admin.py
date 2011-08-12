@@ -31,11 +31,11 @@ class EmailTemplateAdminForm(forms.ModelForm):
 class EmailTemplateAdmin(admin.ModelAdmin):                           
     list_display = ('name', 'date_created',)
     form = EmailTemplateAdminForm
-    
+
 class EmailListAdmin(admin.ModelAdmin):
     list_display = ('name', 'type', 'date_created', 'preview_emails', 'merge_fields',)
     list_filter = ('type', 'is_oneoff',)
-    
+        
     def changelist_view(self, request, extra_context=None):
         '''
         This override, by default hides, the one off lists that are
