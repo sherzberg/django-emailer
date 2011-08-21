@@ -239,7 +239,7 @@ class Email(DefaultModel):
     html = property(_html)
     
     class Meta:
-        ordering = ['date_created']
+        ordering = ['-date_created']
     
     @models.permalink
     def get_tracking_png_url(self):
