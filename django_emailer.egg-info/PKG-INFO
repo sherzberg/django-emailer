@@ -1,0 +1,29 @@
+Metadata-Version: 1.0
+Name: django-emailer
+Version: trunk
+Summary: A Django application that manages mass emails sent to lists.
+Home-page: https://github.com/whelmingbytes/django-emailer
+Author: Spencer Herzberg
+Author-email: spencer.herzberg@gmail.com
+License: GPL
+Download-URL: https://github.com/whelmingbytes/django-emailer
+Description: 
+        A Django application that manages mass emails sent to lists.
+        
+        Features:
+        
+        * Create email lists.
+        * Send to selected lists.
+        * Track email status.
+        
+Keywords: django email
+Platform: any
+Classifier: Development Status :: 1
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GPL
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

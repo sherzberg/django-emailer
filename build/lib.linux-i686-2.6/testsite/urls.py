@@ -13,9 +13,7 @@ urlpatterns = patterns('',
     url(r'^tinymce/', include('tinymce.urls')),
     
     #admin
-    #url(r'^admin/(.*)', admin.site.root),
-    url(r'^admin/', admin.site.urls),
-    
+    url(r'^admin/(.*)', admin.site.root),
     url(r'^%s(?P<path>.*)$' % settings.MEDIA_URL[1:], 
         'django.views.static.serve', {"document_root": settings.MEDIA_ROOT}),
 )

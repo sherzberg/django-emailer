@@ -15,19 +15,13 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-#DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
-#DATABASE_NAME = os.path.join(CURRENT_PATH, 'database.sqlite') # Or path to database file if using sqlite3.
-#DATABASE_USER = ''             # Not used with sqlite3.
-#DATABASE_PASSWORD = ''         # Not used with sqlite3.
-#DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-#DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'ado_mssql'.
+DATABASE_NAME = os.path.join(CURRENT_PATH, 'database.sqlite') # Or path to database file if using sqlite3.
+DATABASE_USER = ''             # Not used with sqlite3.
+DATABASE_PASSWORD = ''         # Not used with sqlite3.
+DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
+DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(CURRENT_PATH, 'database.sqlite')
-    }
-}
 if DEBUG:
     EMAIL_HOST_USER = 'test@gmail.com'
     EMAIL_HOST = '127.0.0.1'

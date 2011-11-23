@@ -43,7 +43,6 @@ def send_siteusers_email(user_objs, from_address, subject, content_html, send_af
 
     email_list = EmailList()
     email_list.name = '%s - %s' %(str(datetime.datetime.now()),str(subject))
-    email_list.save()
     email_list.data_site_users = user_objs
     email_list.is_oneoff = True
     email_list.type = EmailList.LISTTYPE_SITEUSERS_USERDEFINED
@@ -51,7 +50,6 @@ def send_siteusers_email(user_objs, from_address, subject, content_html, send_af
     
     email_blast = EmailBlast()
     email_blast.name = subject+ ' '+str(datetime.datetime.today().strftime("%Y-%b-%d-%m"))
-    email_blast.save()
     email_blast.lists = [email_list]
     email_blast.send_after = send_after if send_after else datetime.datetime.now()
     email_blast.from_address = from_address

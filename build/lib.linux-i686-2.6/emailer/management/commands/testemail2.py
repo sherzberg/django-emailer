@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
-from emailer.utils import send_siteusers_email
+from emailer.utils import send_raw_email 
         
 class Command(BaseCommand):
     args = "None"
@@ -14,9 +14,9 @@ class Command(BaseCommand):
         
         html = '<p>Hello</p>lksjdlfkdj'
         
-        users = User.objects.all()
-        
-        send_siteusers_email(users, from_address, subject, html)
-        
-        print 'Email Sent'
+#        u = User.objects.all()[0]:
+#            if u.email != '':
+#                send_raw_email(u, from_address, subject, html)
+#        
+        print 'test sent'
         
