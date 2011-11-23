@@ -13,3 +13,6 @@ media/proofing/
 *.sqlite
 .project
 .pydevproject
+build/
+dist/
+django_emailer.egg-info/
