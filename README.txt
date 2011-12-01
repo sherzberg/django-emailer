@@ -2,6 +2,8 @@ django-emailer
 
 v.1 - 2011-08-13
 
+*** This software should be considered beta. However, I do use the email templates, lists, and bulk emails on a daily production site for a limited amount of emails per week. ***
+
 This django app is used to manage bulk (and one off) emails. You can create email templates,
 and email lists. Emails can be created and bulk sent in a future date.
 
