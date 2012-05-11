@@ -23,7 +23,7 @@ class DictionaryField(models.Field):
                 return value
         return pickle.loads(str(value))
         
-    def get_db_prep_save(self, value):
+    def get_db_prep_save(self, value, connection):
         if value is not None and not isinstance(value, basestring):
             if isinstance(value, dict):
                 value = pickle.dumps(value)
@@ -34,7 +34,7 @@ class DictionaryField(models.Field):
     def get_internal_type(self): 
         return 'TextField'
     
-    def get_db_prep_lookup(self, lookup_type, value):
+    def get_db_prep_lookup(self, lookup_type, value, connection):
         if lookup_type == 'exact':
             value = self.get_db_prep_save(value)
             return super(DictionaryField, self).get_db_prep_lookup(lookup_type, value)

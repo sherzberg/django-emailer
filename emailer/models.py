@@ -45,7 +45,6 @@ class EmailList(DefaultModel):
     LISTTYPE_RAW_JSON = 3
     LISTTYPE_SITEGROUPS = 4
     
-    
     EMAIL_LIST_TYPE_CHOICES = (
                          (LISTTYPE_SITEUSERS_USERDEFINED,'Site Users - User Defined'),
                          (LISTTYPE_QUERY_CUSTOM_SQL, 'Custom SQL Query'),

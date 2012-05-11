@@ -16,3 +16,4 @@ media/proofing/
 build/
 dist/
 django_emailer.egg-info/
+*.*~

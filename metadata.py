@@ -1,4 +1,4 @@
 name = 'emailer'
 authors = 'Spencer Herzberg'
-version = 'trunk'
+version = '.2'
 release = version

@@ -1,5 +1,5 @@
 
-
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from emailer.utils import send_raw_email 
@@ -13,7 +13,7 @@ class Command(BaseCommand):
             def __init__(self, email):
                 self.email = email
                 
-        to_address = 'spencer.herzberg@gmail.com'
+        to_address = settings.ADMINS[0][0]
         from_address = 'test@gmail.com'
         subject = 'one off test'
         
