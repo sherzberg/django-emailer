@@ -2,7 +2,7 @@
 
 from django.core.management.base import BaseCommand, CommandError
 
-from emailer.utils.emailprocessors import SimpleProcessor      
+from emailer.utils.processors import SimpleProcessor      
         
 class Command(BaseCommand):
     args = "None"
@@ -15,6 +15,6 @@ class Command(BaseCommand):
         processor.prepare_emails()
         num_processed = processor.process_emails()
         
-        print 'Done: processed %d' %num_processed
+        print 'Done: processed %d emails' %num_processed
         
         

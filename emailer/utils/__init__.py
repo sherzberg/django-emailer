@@ -1,9 +1,8 @@
 
 from emailer.models import EmailBlast, EmailList
+from processors import SimpleProcessor
 
 import datetime
-
-
 
 def send_raw_email(email_obj, from_address, subject, content_html, send_after = None, just_prepare=False):
     '''
