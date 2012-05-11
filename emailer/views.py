@@ -22,7 +22,7 @@ def tracking(request, tracking_id):
 
 def templates(request):
     templates = EmailTemplate.objects.all()
-    return render_to_response('tinymce/template_list.js', {'templates': templates},
+    return render_to_response('emailer/template_list.js', {'templates': templates},
             context_instance=RequestContext(request), 
             mimetype='text/javascript')
     
