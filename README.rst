@@ -156,7 +156,7 @@ If want to use a background process to send the emails:
 
 This will prepare the emails to be sent. Now you need to run a Processor in the background.
 There is a management command to do this for you which uses the SimpleProcessor. This processor
-will grab the next 50 emails and send them.
+will grab the next 50 emails and send them:
 
 ::
     python manage.py process_emails
