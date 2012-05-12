@@ -13,7 +13,7 @@ class Command(BaseCommand):
             def __init__(self, email):
                 self.email = email
                 
-        to_address = settings.ADMINS[0][0]
+        to_address = settings.ADMINS[0][1]
         from_address = 'test@gmail.com'
         subject = 'one off test'
         
