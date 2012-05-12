@@ -23,23 +23,37 @@ Features (that currently work):
 ===============================
 
 * EmailLists
+
    - Site users (list of auth.models.user objects)
+
    - Raw email addresses (list of comma separated emails)
+
 * EmailBlasts
+
    - Allows you to send email to EmailLists.
+
 * Merge fields
+
    - Uses standard django template processor to fill in merge fields.
+
 * Integrates with tinymce, just install django-tinymce and configure it appropriately
+
 * HTML and text content in emails (uses html2text to generate the text content)
+
 * Tracking for opened emails (currently uses html image requests for tracking so only possible for HTML clients)
+
     
 Future Features:
 ================
 
 * EmailLists
+
    - Custom sql query (query for email address and merge data)
+
 * Celery async email jobs
+
 * Admin actions to process emails
+
 * Doctor direct links to the site to include tracking information which will provide tracking for people who paste links from text versions of the email
 
 
@@ -49,11 +63,13 @@ Install
 You can use the setup.py file to install
 
 ::
+
     python setup.py install
 
 Or you can use pip and install from the github repository
 
 ::
+
     pip install -e git+git://github.com/whelmingbytes/django-emailer.git#egg=django-emailer
 
 Setup
