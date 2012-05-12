@@ -28,7 +28,8 @@ class EmailBlastAdmin(admin.ModelAdmin):
             'fields': (
                 ('name',),
                 ('subject', 'from_address',),
-                ('send_after', 'lists',),
+                ('send_after',),
+                ('lists',),
                 ('html',)
                 ),
         }),

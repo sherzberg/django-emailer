@@ -163,7 +163,8 @@ class EmailBlast(DefaultModel):
     lists = models.ManyToManyField(EmailList)
 
     is_prepared = models.BooleanField(default=False)
-    send_after = models.DateTimeField(blank=False)
+    send_after = models.DateTimeField(blank=False,
+        help_text='This is the date the email is going to be sent after. The email also must be prepared before it is sent.')
     from_address = models.EmailField(blank=False)
     subject = models.CharField(blank=False, max_length=40)
     
