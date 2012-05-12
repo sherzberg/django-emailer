@@ -1,5 +1,6 @@
 
 from emailer.models import Email
+import datetime
 
 class AbstractProcessor():
 
@@ -25,7 +26,7 @@ class SimpleProcessor(AbstractProcessor):
         pass
 
     def process_emails(self):
-        emails = Email.objects.filter(status=Email.STATUS_PREPARED)[:50]
+        emails = Email.objects.filter(status=Email.STATUS_PREPARED).filter(email_blast__send_after__lte=datetime.datetime.now())[:50]
         for email in emails:
             email.send()
         return len(emails)
