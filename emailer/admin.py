@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django import forms
 
 try:
@@ -12,6 +12,19 @@ class EmailAdmin(admin.ModelAdmin):
     list_display = ('email_blast', 'to_address', 'status', 'opened', 'merge_data',)
     list_filter = ('status',)
 
+def prepare_blast(modeladmin, request, queryset):
+    not_prepared = list(queryset.filter(is_prepared=False))
+    prepared = list(queryset.filter(is_prepared=True))
+    for blast in not_prepared:
+        blast.send(just_prepare=True)
+
+    if not_prepared:
+        messages.add_message(request, messages.SUCCESS, ', '.join(["[%s]"%blast.name for blast in not_prepared])+' have been prepared to send.')
+    if prepared:
+        messages.add_message(request, messages.WARNING, ', '.join(["[%s]"%blast.name for blast in prepared])+' have already been prepared to send.')
+
+prepare_blast.short_description = 'Prepare for Send'
+
 class EmailBlastAdminForm(forms.ModelForm):  
     html = forms.CharField(widget=HtmlWidget(attrs={'cols': 80, 'rows': 40}))
     
@@ -19,10 +32,11 @@ class EmailBlastAdminForm(forms.ModelForm):
         model = EmailBlast
            
 class EmailBlastAdmin(admin.ModelAdmin):
-    list_display = ('name', 'lists_str', 'send_after',)
+    list_display = ('name', 'lists_str', 'is_prepared', 'send_after',)
     list_filter = ('send_after',)
     form = EmailBlastAdminForm
 
+    actions = [prepare_blast]
     fieldsets = (
         (None, {
             'fields': (

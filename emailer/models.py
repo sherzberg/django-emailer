@@ -171,7 +171,7 @@ class EmailBlast(DefaultModel):
     html = models.TextField(blank=False)
 
     class Meta:
-        ordering = ['date_created']
+        ordering = ['-date_created']
 
     def __unicode__(self):
         return str(self.name)
@@ -196,7 +196,7 @@ class EmailBlast(DefaultModel):
         if not self.is_prepared:
             self._prepare_for_send()
 
-        if not just_prepare or not datetime.datetime.now > self.send_after:
+        if not just_prepare or not datetime.datetime.now() > self.send_after:
             for email in Email.objects.filter(email_blast=self):
                 email.send()
 
