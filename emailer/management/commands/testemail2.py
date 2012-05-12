@@ -15,7 +15,7 @@ class Command(BaseCommand):
                 
         to_address = settings.ADMINS[0][0]
         from_address = 'test@gmail.com'
-        subject = 'one off test'
+        subject = 'one off test - just prepared'
         
         html = '''<p>This message was sent to: {{ email }}</p>'''
         

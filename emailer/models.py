@@ -12,7 +12,7 @@ add_introspection_rules([], ["^emailer\.fields\.DictionaryField"])
 from emailer.html2text import html2text
 from emailer.fields import DictionaryField
 
-import uuid, json
+import uuid, json, datetime
 
 def make_uuid():
     return str(uuid.uuid4())
@@ -154,24 +154,21 @@ class EmailList(DefaultModel):
 class EmailBlast(DefaultModel):    
     name = models.CharField(blank=False, unique=False, max_length=50)
     lists = models.ManyToManyField(EmailList)
-    
+
+    is_prepared = models.BooleanField(default=False)
     send_after = models.DateTimeField(blank=False)
     from_address = models.EmailField(blank=False)
     subject = models.CharField(blank=False, max_length=40)
     
     html = models.TextField(blank=False)
-    
-    def _is_prepared(self):
-        return len(Email.objects.filter(email_blast=self)) > 0
-    is_prepared = property(_is_prepared)
-    
+
     class Meta:
         ordering = ['date_created']
 
     def __unicode__(self):
         return str(self.name)
     
-    def prepare_for_send(self):
+    def _prepare_for_send(self):
         if not self.is_prepared:
             for list in self.lists.all():
                 for obj in list.get_objects():
@@ -181,17 +178,19 @@ class EmailBlast(DefaultModel):
                     email.merge_data = obj.__dict__
                     email.status = Email.STATUS_PREPARED
                     email.save()
+            self.is_prepared = True
+            self.save()
                     
-    def send_now(self):
+    def send(self, just_prepare=False):
         '''
         Sends an email for all objects in the assigned lists.
-        Do not do this if there is a ton of emails!
         '''
         if not self.is_prepared:
-            self.prepare_for_send()
-        
-        for email in Email.objects.filter(email_blast=self):
-            email.send()
+            self._prepare_for_send()
+
+        if not just_prepare or not datetime.datetime.now > self.send_after:
+            for email in Email.objects.filter(email_blast=self):
+                email.send()
         
 def _apply_merge_data(html, merge_data):
     t = Template(html)
@@ -210,19 +209,19 @@ class EmailManager(models.Manager):
 class Email(DefaultModel):
     STATUS_PREPARED = 0
     STATUS_SENT = 1
-    STATUS_ERRORED = 2
+    STATUS_ERROR = 2
     
-    STATUS_CHOCES = (
+    STATUS_CHOICES = (
                      (STATUS_PREPARED, 'Prepared'),
                      (STATUS_SENT, 'Sent'),
-                     (STATUS_ERRORED, 'Errored'),
+                     (STATUS_ERROR, 'Error'),
                      )
     
     email_blast = models.ForeignKey(EmailBlast, blank=False)
     to_address = models.EmailField(blank=False)
     merge_data = DictionaryField(editable=False, blank=True)
     
-    status = models.IntegerField(blank=False, choices=STATUS_CHOCES, default=STATUS_PREPARED, editable=False)
+    status = models.IntegerField(blank=False, choices=STATUS_CHOICES, default=STATUS_PREPARED, editable=False)
     status_message = models.TextField(blank=True, editable=False)
     opened = models.BooleanField(default=False, editable=False)
     
@@ -282,16 +281,23 @@ class Email(DefaultModel):
         return msg
     
     def send(self):
-        if self.status != Email.STATUS_PREPARED:
-            raise IncorrectEmailStatus("Email is not in status of prepared, something bad must have happened")
-        
-        message = self._build_message()
-        
-        try:
-            message.send()
-            self.status = Email.STATUS_SENT
-        except Exception, e:
-            self.status = Email.STATUS_ERRORED
-            self.status_message = str(e)
-            
-        self.save()
+        '''
+        Actually send the email using django email. If the associated blasts
+        send datetime is not after the current datetime, the email will not
+        be sent. This will be a silent failure. You should not call this
+        method directly, it should be called by a blast or a processor.
+        '''
+        if datetime.datetime.now() > self.email_blast.send_after:
+            if self.status != Email.STATUS_PREPARED:
+                raise IncorrectEmailStatus("Email is not in status of prepared, something bad must have happened!")
+
+            message = self._build_message()
+
+            try:
+                message.send()
+                self.status = Email.STATUS_SENT
+            except Exception, e:
+                self.status = Email.STATUS_ERROR
+                self.status_message = str(e)
+
+            self.save()
