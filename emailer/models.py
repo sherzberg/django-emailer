@@ -38,6 +38,11 @@ class EmailTemplate(DefaultModel):
     def get_absolute_url(self):
         return ('emailer-template', (), {'template_id': self.id})
 
+class EmailListManager(models.Manager):
+
+    def get_query_set(self):
+        return super(EmailListManager, self).get_query_set().exclude(is_oneoff=True)
+
 class EmailList(DefaultModel):
     LISTTYPE_SITEUSERS_USERDEFINED = 0
     LISTTYPE_QUERY_CUSTOM_SQL = 1
@@ -70,7 +75,12 @@ class EmailList(DefaultModel):
     data_site_groups = models.ManyToManyField(Group, blank=True)
     
     is_oneoff = models.BooleanField(default=False)
-        
+
+    objects = EmailListManager()
+
+    class Meta:
+        ordering = ['name']
+
     def _is_valid_field(self, field):
         return not field == 'id' and not field.startswith('_')
     
@@ -140,9 +150,6 @@ class EmailList(DefaultModel):
     merge_fields.short_description = 'Merge Fields'
     merge_fields.allow_tags = True
     
-    class Meta:
-        ordering = ['name']
-
     def save(self, *args, **kwargs):
         if self.is_oneoff and not self.name.startswith('_'):
             self.name = '_'+self.name
@@ -191,7 +198,13 @@ class EmailBlast(DefaultModel):
         if not just_prepare or not datetime.datetime.now > self.send_after:
             for email in Email.objects.filter(email_blast=self):
                 email.send()
-        
+
+    def lists_str(self):
+        lists = [list.name for list in self.lists.all()]
+        return u', '.join(lists) if lists else 'One Off List'
+    lists_str.short_description = 'Lists'
+    lists_str.allow_tags = True
+
 def _apply_merge_data(html, merge_data):
     t = Template(html)
     c = Context(merge_data)

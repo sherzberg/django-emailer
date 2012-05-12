@@ -19,7 +19,7 @@ class EmailBlastAdminForm(forms.ModelForm):
         model = EmailBlast
            
 class EmailBlastAdmin(admin.ModelAdmin):
-    list_display = ('name', 'send_after',)
+    list_display = ('name', 'lists_str', 'send_after',)
     list_filter = ('send_after',)
     form = EmailBlastAdminForm
     
