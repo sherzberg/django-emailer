@@ -159,6 +159,7 @@ There is a management command to do this for you which uses the SimpleProcessor.
 will grab the next 50 emails and send them:
 
 ::
+
     python manage.py process_emails
 
 To send emails on schedule, just set this up on a cronjob or similar tool.
