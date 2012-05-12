@@ -21,10 +21,10 @@ django-emailer is tested with:
     
 Features (that currently work):
 ===============================
-* EmailLists:
+* EmailLists
    * Site users (list of auth.models.user objects)
    * Raw email addresses (list of comma separated emails)
-* EmailBlasts:
+* EmailBlasts
    * Allows you to send email to EmailLists.
 * Merge fields
    * Uses standard django template processor to fill in merge fields.
