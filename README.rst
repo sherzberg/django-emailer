@@ -43,19 +43,19 @@ Future Features:
 
 Install:
 ========
-You can use the setup.py file to install:
+You can use the setup.py file to install
 
 ::
     python setup.py install
 
-Or you can use pip and install from the github repository:
+Or you can use pip and install from the github repository
 
 ::
     pip install -e git+git://github.com/whelmingbytes/django-emailer.git#egg=django-emailer
 
 Setup:
 ======
-* include in INSTALLED_APPS (settings.py)
+include in INSTALLED_APPS (settings.py)
 
 ::
 
@@ -63,7 +63,7 @@ Setup:
     'emailer',
     ...
 
-* setup smtp settings (settings.py)
+setup smtp settings (settings.py)
 
 ::
 
@@ -74,21 +74,21 @@ Setup:
     EMAIL_USE_TLS = False
     ...
 
-* include in urls (urls.py)
+include in urls (urls.py)
 
 ::
 
     url(r'^emailer/', include('emailer.urls')),
         
-* if using django-tinymce, put this in the tinymce.init config (enables tiny-mce templates to use emailer templates):
+if using django-tinymce, put this in the tinymce.init config (enables tiny-mce templates to use emailer templates):
 
 ::
 
     'template_external_list_url' : "emailer/templates/",
     
-* update site instance in the admin to reflect your site, see the django docs for this
+update site instance in the admin to reflect your site, see the django docs for this
     
-* sync up your models, see django-south for more information
+sync up your models, see django-south for more information
 
 ::
 
