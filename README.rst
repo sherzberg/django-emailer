@@ -41,7 +41,7 @@ Future Features:
 * Doctor direct links to the site to include tracking information which will provide tracking for people who paste links from text versions of the email
 
 
-Install:
+Install
 ========
 You can use the setup.py file to install
 
@@ -53,7 +53,7 @@ Or you can use pip and install from the github repository
 ::
     pip install -e git+git://github.com/whelmingbytes/django-emailer.git#egg=django-emailer
 
-Setup:
+Setup
 ======
 include in INSTALLED_APPS (settings.py)
 
