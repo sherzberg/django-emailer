@@ -24,7 +24,7 @@ and email lists. Emails can be created and bulk sent in a future date.
  - EmailBlasts:
     - Allows you to send email to EmailLists.
  - Merge fields
-    - Uses standard djangos template processor to fill in merge fields.
+    - Uses standard django template processor to fill in merge fields.
  - Integrates with tinymce, just install django-tinymce and configure it appropriately
  - HTML and text content in emails (uses html2text to generate the text content)
  - Tracking for opened emails (currently uses html image requests for tracking so only possible for HTML clients)
