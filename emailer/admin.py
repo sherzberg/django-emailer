@@ -22,6 +22,21 @@ class EmailBlastAdmin(admin.ModelAdmin):
     list_display = ('name', 'lists_str', 'send_after',)
     list_filter = ('send_after',)
     form = EmailBlastAdminForm
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('name',),
+                ('subject', 'from_address',),
+                ('send_after', 'lists',),
+                ('html',)
+                ),
+        }),
+#        ('Advanced options', {
+##            'classes': ('collapse',),
+##            'fields': ('enable_comments', 'registration_required', 'template_name')
+#        }),
+        )
     
 class EmailTemplateAdminForm(forms.ModelForm):
     name = forms.CharField()
