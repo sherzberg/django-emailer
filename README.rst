@@ -37,6 +37,8 @@ Features (that currently work):
 
    - Uses standard django template processor to fill in merge fields.
 
+* Admin actions to process emails
+
 * Integrates with tinymce, just install django-tinymce and configure it appropriately
 
 * HTML and text content in emails (uses html2text to generate the text content)
@@ -52,8 +54,6 @@ Future Features:
    - Custom sql query (query for email address and merge data)
 
 * Celery async email jobs
-
-* Admin actions to process emails
 
 * Doctor direct links to the site to include tracking information which will provide tracking for people who paste links from text versions of the email
 
