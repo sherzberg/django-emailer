@@ -21,6 +21,7 @@ django-emailer is tested with:
     
 Features (that currently work):
 ===============================
+
 * EmailLists
    * Site users (list of auth.models.user objects)
    * Raw email addresses (list of comma separated emails)
@@ -34,8 +35,9 @@ Features (that currently work):
     
 Future Features:
 ================
+
 * EmailLists
-    - Custom sql query (query for email address and merge data)
+   * Custom sql query (query for email address and merge data)
 * Celery async email jobs
 * Admin actions to process emails
 * Doctor direct links to the site to include tracking information which will provide tracking for people who paste links from text versions of the email
@@ -43,6 +45,7 @@ Future Features:
 
 Install
 ========
+
 You can use the setup.py file to install
 
 ::
@@ -55,6 +58,7 @@ Or you can use pip and install from the github repository
 
 Setup
 ======
+
 include in INSTALLED_APPS (settings.py)
 
 ::
@@ -98,6 +102,7 @@ sync up your models, see django-south for more information
 
 Use it:
 =======
+
 Using the utility helper functions is the fastest way to send email:
 
 ::
