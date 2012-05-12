@@ -4,9 +4,10 @@ django-emailer
 v.2 - 2012-05-10
 ----------------
 
-**This software should be considered beta. However, I do use the email templates, lists, and bulk emails on a daily production site for a limited amount of emails per week.**
+**This software should be considered beta. However, I do use the email templates, lists, 
+and bulk emails daily on a production site.**
 
-This django app is used to manage bulk (and one off) emails. You can create email templates,
+This django app is used to manage bulk emails. You can create email templates,
 and email lists. Emails can be created and bulk sent in a future date.
 
 Requirements
@@ -136,3 +137,28 @@ Using the utility helper functions is the fastest way to send email:
     #the users table. This will block until the email is sent.
     send_siteusers_email(users_to_send_to, subject, from, content)
 
+If want to use a background process to send the emails:
+
+::
+
+    from emailer.utils import send_siteusers_email
+    from django.contrib.auth.models import User
+
+    users_to_send_to = User.objects.filter(email__contains='oo')
+
+    subject = 'Simple Test Email'
+    from = 'no-reply@myhost.com'
+    content = '<h1>Hello!</h1> This is a test email.'
+
+    #This will send an email to all users with 'oo' in their email address from
+    #the users table. This will block until the email is sent.
+    send_siteusers_email(users_to_send_to, subject, from, content, just_prepare=True)
+
+This will prepare the emails to be sent. Now you need to run a Processor in the background.
+There is a management command to do this for you which uses the SimpleProcessor. This processor
+will grab the next 50 emails and send them.
+
+::
+    python manage.py process_emails
+
+To send emails on schedule, just set this up on a cronjob or similar tool.
