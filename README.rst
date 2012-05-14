@@ -18,7 +18,7 @@ django-emailer is tested with:
 * Django (1.4)
 * Python Image Library (PIL) (1.1.7)
 * South (0.7.5)
-* django-tinymce
+* django-tinymce (1.5.1b2)
     
 Features (that currently work):
 ===============================
