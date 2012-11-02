@@ -1,4 +1,8 @@
-import os
+import os, sys
+def rel(*x):
+    return os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
+
+sys.path.insert(0, rel('..'))
 
 SITE_ID = 1
 
@@ -107,3 +111,31 @@ TINYMCE_DEFAULT_CONFIG = {
     'template_external_list_url' : "emailer/templates/",
 
 }
+
+LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'verbose': {
+                'format': '''%(levelname)s %(asctime)s %(module)s %(process)d
+                %(thread)d %(message)s'''
+                },
+            'simple': {
+                'format': '%(levelname)s %(message)s'
+                }
+            },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple'
+                }
+            },
+        'loggers': {
+            'emailer': {
+                'handlers': ['console'],
+                'level': 'DEBUG'
+                }
+            }
+        }
+

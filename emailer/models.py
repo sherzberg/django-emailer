@@ -1,3 +1,6 @@
+import logging
+logger = logging.getLogger('emailer.models')
+
 from django.db import models
 from django.contrib.auth.models import User, Group
 from django.db import connection
@@ -40,8 +43,10 @@ class EmailTemplate(DefaultModel):
 
 class EmailListManager(models.Manager):
 
-    def get_query_set(self):
-        return super(EmailListManager, self).get_query_set().exclude(is_oneoff=True)
+    #temporary bug fix for not sending emails to blasts with one offs
+    pass
+    #def get_query_set(self):
+       # return super(EmailListManager, self).get_query_set().exclude(is_oneoff=True)
 
 class EmailList(DefaultModel):
     LISTTYPE_SITEUSERS_USERDEFINED = 0
@@ -92,12 +97,15 @@ class EmailList(DefaultModel):
                     if self._is_valid_field(field):
                         setattr(u, field, value)
         except:
+            logger.debug("No Auth Profile Defined")
             #eat this if there is no profile defined in settings.py
             pass
         return users
     
     def get_objects(self):
-        
+       
+        logger.debug("Getting objects for EmailList.type=%s", self.type)
+
         if self.type in (EmailList.LISTTYPE_SITEUSERS_USERDEFINED,):
             users = self._get_user_objs(self.data_site_users.all())
             return users

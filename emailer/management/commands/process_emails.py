@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger('emailer.process_emails')
 
 from django.core.management.base import BaseCommand, CommandError
 from emailer.utils.processors import SimpleProcessor
@@ -8,12 +10,13 @@ class Command(BaseCommand):
     help = 'Process emails with SimpleProcessor'
 
     def handle(self, *args, **options):
-        print datetime.datetime.now(), 'Starting SimpleProcessor'
+        logger.debug('Starting SimpleProcessor')
 
         processor = SimpleProcessor()
                 
         processor.prepare_emails()
         num_processed = processor.process_emails()
         
-        print datetime.datetime.now(), 'SimpleProcessor Done: processed %d email(s)' %num_processed
+        logger.debug('SimpleProcessor Done: processed %d email(s)',
+                num_processed)
         

@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger('emailer.utils.processors')
 
 from emailer.models import Email
 import datetime
@@ -26,7 +28,14 @@ class SimpleProcessor(AbstractProcessor):
         pass
 
     def process_emails(self):
-        emails = Email.objects.filter(status=Email.STATUS_PREPARED).filter(email_blast__send_after__lte=datetime.datetime.now())[:50]
+        logger.debug('Starting to process email blasts')
+
+        emails = Email.objects.filter(status=Email.STATUS_PREPARED)
+        logger.debug("Emails: "+str(len(emails.all())))
+        emails = emails.filter(email_blast__send_after__lte=datetime.datetime.now())[:50]
+        
+        logger.debug('Attempting to process %d emails', len(emails))
         for email in emails:
             email.send()
+        
         return len(emails)
